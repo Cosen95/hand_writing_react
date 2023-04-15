@@ -12,3 +12,6 @@ export interface ReactElementType {
 	ref: Ref;
 	__mark: string;
 }
+
+// 对应setState更新两种方式（传入对象或函数）
+export type Action<State> = State | ((prevState: State) => State);
