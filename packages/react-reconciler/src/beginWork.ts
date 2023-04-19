@@ -9,7 +9,7 @@ import { reconcilerChildFibers, mountChildFibers } from './childFibers';
 // <A>
 //  <B/>
 // </A>
-// 当进入A的beginWork时，通过对比B current fiberNode与B reactElement，生成B对应wip fiberNode
+// 当进入A的beginWork时，通过对比B current fiberNode与B reactElement，生成B对应workInProgress fiberNode
 
 // 递归中的递阶段
 export const beginWork = (workInProgress: FiberNode) => {
@@ -29,6 +29,7 @@ export const beginWork = (workInProgress: FiberNode) => {
 			}
 			break;
 	}
+	return null;
 };
 
 // 1、计算状态的最新值
