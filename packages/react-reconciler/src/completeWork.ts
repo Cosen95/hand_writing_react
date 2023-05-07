@@ -1,11 +1,17 @@
 import { FiberNode } from './fiber';
-import { HostComponent, HostText, HostRoot } from './workTags';
+import {
+	HostComponent,
+	HostText,
+	HostRoot,
+	FunctionComponent
+} from './workTags';
 import {
 	createInstance,
 	appendInitialChild,
 	createTextInstance
-} from './hostConfig';
+} from 'hostConfig';
 import { NoFlags } from './fiberFlags';
+import { Container } from '../../react-dom/src/hostConfig';
 
 // 需要解决的问题：
 // 对于Host类型fiberNode：构建离屏DOM树
@@ -21,7 +27,8 @@ export const completeWork = (workInProgress: FiberNode) => {
 				// update
 			} else {
 				// 1、构建DOM
-				const instance = createInstance(workInProgress.type, newProps);
+				// const instance = createInstance(workInProgress.type, newProps);
+				const instance = createInstance(workInProgress.type);
 				// 2、将DOM插入到DOM树中
 				appendAllChildren(instance, workInProgress);
 				workInProgress.stateNode = instance;
@@ -44,13 +51,17 @@ export const completeWork = (workInProgress: FiberNode) => {
 			bubbleProperties(workInProgress);
 
 			return null;
+		case FunctionComponent:
+			bubbleProperties(workInProgress);
+
+			return null;
 
 		default:
 			break;
 	}
 };
 
-function appendAllChildren(parent: FiberNode, workInProgress: FiberNode) {
+function appendAllChildren(parent: Container, workInProgress: FiberNode) {
 	let node = workInProgress.child;
 
 	while (node !== null) {

@@ -1,8 +1,14 @@
 import { FiberNode } from './fiber';
-import { HostRoot, HostComponent, HostText } from './workTags';
+import {
+	HostRoot,
+	HostComponent,
+	HostText,
+	FunctionComponent
+} from './workTags';
 import { UpdateQueue, processUpdateQueue } from './updateQueue';
 import { ReactElementType } from '../../shared/ReactTypes';
 import { reconcilerChildFibers, mountChildFibers } from './childFibers';
+import { renderWithHooks } from './fiberHooks';
 
 // 对于如下结构的reactElement：
 
@@ -22,6 +28,8 @@ export const beginWork = (workInProgress: FiberNode) => {
 		case HostText:
 			// HostText没有beginWork工作流程 因为它没有根节点
 			return null;
+		case FunctionComponent:
+			return updateFunctionComponent(workInProgress);
 
 		default:
 			if (__DEV__) {
@@ -31,6 +39,13 @@ export const beginWork = (workInProgress: FiberNode) => {
 	}
 	return null;
 };
+
+function updateFunctionComponent(workInProgress: FiberNode) {
+	const nextChildren = renderWithHooks(workInProgress);
+
+	reconcilerChildren(workInProgress, nextChildren);
+	return workInProgress.child;
+}
 
 // 1、计算状态的最新值
 // 2、创造子fiberNode
