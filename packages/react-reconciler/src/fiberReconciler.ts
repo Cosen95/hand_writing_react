@@ -27,6 +27,7 @@ export function updateContainer(
 		hostRootFiber.updateQueue as UpdateQueue<ReactElementType | null>,
 		update
 	);
+	console.log('updateContainer');
 	scheduleUpdateOnFiber(hostRootFiber);
 	return element;
 }
