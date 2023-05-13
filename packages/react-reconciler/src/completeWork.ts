@@ -8,10 +8,14 @@ import {
 import {
 	createInstance,
 	appendInitialChild,
-	createTextInstance
+	createTextInstance,
+	Container
 } from 'hostConfig';
-import { NoFlags } from './fiberFlags';
-import { Container } from '../../react-dom/src/hostConfig';
+import { NoFlags, Update } from './fiberFlags';
+
+function markUpdate(fiber: FiberNode) {
+	fiber.flags |= Update;
+}
 
 // 需要解决的问题：
 // 对于Host类型fiberNode：构建离屏DOM树
@@ -38,6 +42,12 @@ export const completeWork = (workInProgress: FiberNode) => {
 		case HostText:
 			if (current !== null && workInProgress.stateNode) {
 				// update
+				const oldText = current.memoizedProps.content;
+				const newText = newProps.content;
+				if (oldText !== newText) {
+					// 标记更新
+					markUpdate(workInProgress);
+				}
 			} else {
 				// 1、构建DOM
 				const instance = createTextInstance(newProps.content);

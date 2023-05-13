@@ -5,7 +5,8 @@ const root = document.querySelector('#root');
 
 function HomeIndex() {
 	const [count, setCount] = useState(6);
-	return <div>{count}</div>;
+	window.setCount = setCount;
+	return count === 3 ? <div>big react</div> : <div>{count}</div>;
 }
 
 ReactDOM.createRoot(root).render(<HomeIndex />);
