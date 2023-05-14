@@ -12,6 +12,7 @@ import {
 	Container
 } from 'hostConfig';
 import { NoFlags, Update } from './fiberFlags';
+import { updateFiberProps } from 'react-dom/src/SyntheticEvent';
 
 function markUpdate(fiber: FiberNode) {
 	fiber.flags |= Update;
@@ -29,10 +30,11 @@ export const completeWork = (workInProgress: FiberNode) => {
 		case HostComponent:
 			if (current !== null && workInProgress.stateNode) {
 				// update
+				updateFiberProps(workInProgress.stateNode, newProps);
 			} else {
 				// 1、构建DOM
 				// const instance = createInstance(workInProgress.type, newProps);
-				const instance = createInstance(workInProgress.type);
+				const instance = createInstance(workInProgress.type, newProps);
 				// 2、将DOM插入到DOM树中
 				appendAllChildren(instance, workInProgress);
 				workInProgress.stateNode = instance;
